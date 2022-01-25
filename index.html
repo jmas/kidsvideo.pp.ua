@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kids Video — развивающие видео для детей и их родителей</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <img
+          src="assets/kidsvideo.png"
+          alt="Kids Video"
+          width="100"
+          height="100"
+        />
+      </div>
+    </header>
+    <div class="container">
+      <h1>Kids Video — развивающие видео для детей и их родителей</h1>
+      <p>
+        На этом сайте можно найти развивающие видео с YouTube для детей и их
+        родителей. Особенностью данного сайта является категоризация YouTube
+        каналов по таким параметрам, как возраст ребенка и пол. Например, можно
+        легко найти <a href="#">каналы для девочек шести лет</a>. Другим
+        положительным моментом является значительное уменьшение количества
+        рекламы в роликах по сравнению с просмотром на YouTube.
+      </p>
+      <p>
+        Если после просмотра вы не согласны с рейтингом канала — его можно
+        пересмотреть, заполнив «<a href="#"
+          >форму для пересмотра рейтинга канала</a
+        >». Если вы хотите добавить канал — воспользуйтесь «<a href="#"
+          >формой для добавления канала</a
+        >».
+      </p>
+      <p>
+        Спасибо, что посетили этот проект. Устраивайтесь по-удобней, выбирайте
+        канал и приступайте к просмотру!
+      </p>
+    </div>
+    <main>
+      <div class="container">
+        <gsh-list
+          from-data="#videos-data"
+          item-template="#videos-item"
+          render-into="#videos-list"
+        >
+          <div class="video-list" id="videos-list"></div>
+        </gsh-list>
+      </div>
+    </main>
+    <footer>
+      <div class="container">
+        Разработка и поддержка
+        <a href="https://jmas.github.io/webuis/" rel="nofollow">WebUI’s</a>
+      </div>
+    </footer>
+
+    <!-- Templates -->
+    <template id="videos-item">
+      <yt-video data-insert-video-id="${videoId}"></yt-video>
+    </template>
+
+    <!-- Data -->
+    <gsh-data
+      document-id="1ZJ8SjPup1dadvJNpOXatiVyKeNV8Kf8K8jtJggkewlU"
+      sheet="videos"
+      id="videos-data"
+      hidden
+    >
+      []
+    </gsh-data>
+
+    <!-- Scripts -->
+    <script src="gsh/gsh-list.js" defer></script>
+    <script src="gsh/gsh-data.js" defer></script>
+    <script src="yt/yt-video.js" defer></script>
+  </body>
+</html>
