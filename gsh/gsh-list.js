@@ -35,6 +35,18 @@ customElements.define(
     }
 
     connectedCallback() {
+      if (!this.fromDataElement) {
+        console.warn(
+          `Attribute "from-data" contains invalid selector. Can't find element.`
+        );
+        return;
+      }
+      if (!this.renderIntoElement) {
+        console.warn(
+          `Attribute "render-into" contains invalid selector. Can't find element.`
+        );
+        return;
+      }
       this._render(this.renderIntoElement, this.fromDataValues);
       this._attachFromDataListener();
     }

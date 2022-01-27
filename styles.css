@@ -146,6 +146,11 @@ footer {
 .video-list:empty::before {
   display: block;
   content: "Пока ничего нет...";
+  padding: 2rem;
+  text-align: center;
+  grid-column: 1 / 4;
+  font-size: 120%;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 @media (min-width: 641px) {
@@ -168,11 +173,6 @@ footer {
 
 .video-list a span {
   display: block;
-  text-transform: lowercase;
-}
-
-.video-list a span::first-letter {
-  text-transform: uppercase;
 }
 
 .controls {

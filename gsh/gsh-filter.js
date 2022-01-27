@@ -26,6 +26,12 @@ customElements.define(
     }
 
     connectedCallback() {
+      if (!this.fromElement) {
+        console.warn(
+          `Attribute "from" contains invalid selector. Can't find element.`
+        );
+        return;
+      }
       this._addDataListeners();
     }
 

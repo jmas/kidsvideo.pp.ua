@@ -42,6 +42,18 @@ customElements.define(
     }
 
     connectedCallback() {
+      if (!this.leftElement) {
+        console.warn(
+          `Attribute "from-left" contains invalid selector. Can't find element.`
+        );
+        return;
+      }
+      if (!this.rightElement) {
+        console.warn(
+          `Attribute "from-right" contains invalid selector. Can't find element.`
+        );
+        return;
+      }
       this._addDataListeners();
     }
 
