@@ -182,7 +182,7 @@ footer {
   margin-top: 2rem;
   margin-bottom: 2rem;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   outline: 1px solid rgba(var(--link), 0.25);
 }
 

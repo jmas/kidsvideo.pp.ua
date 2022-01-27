@@ -1,3 +1,32 @@
+const applyFilterForm = () => {
+  const form = document.getElementById("filter-form");
+  const filter = document.getElementById("videos-channels-filtered-data");
+  const elements = Array.from(form.elements);
+  const conditionItems = [];
+  elements.forEach((element) => {
+    if (element.type === "checkbox" && element.checked) {
+      conditionItems.push([element.name, element.value]);
+    }
+  });
+  filter.setAttribute(
+    "filter",
+    conditionItems
+      .map(([name, value]) => `item.${name} == '${value}'`)
+      .join(" || ")
+  );
+};
+
+const addFilterFormListener = () => {
+  const form = document.getElementById("filter-form");
+  form.addEventListener(
+    "change",
+    () => {
+      applyFilterForm();
+    },
+    true
+  );
+};
+
 const addVideoClickListener = () => {
   // Check that browser supports dialog element
   if (!(typeof HTMLDialogElement === "function")) {
@@ -23,6 +52,8 @@ const addVideoClickListener = () => {
 
 const main = () => {
   addVideoClickListener();
+  addFilterFormListener();
+  applyFilterForm();
 };
 
 main();

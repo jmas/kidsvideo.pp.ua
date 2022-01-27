@@ -47,15 +47,14 @@ customElements.define(
         );
         return;
       }
-      this._render(this.renderIntoElement, this.fromDataValues);
-      this._attachFromDataListener();
+      this._addFromDataListener();
     }
 
     disconnectedCallback() {
       this._detachFromDataListener();
     }
 
-    _attachFromDataListener = () => {
+    _addFromDataListener = () => {
       this.fromDataElement.addEventListener(
         "change",
         this._fromDataLoadListener,
@@ -88,9 +87,7 @@ customElements.define(
     };
 
     _render = (element, values) => {
-      for (let i = 0; i < element.children.length; i++) {
-        element.removeChild(element.children[i]);
-      }
+      element.innerText = "";
       for (let i = 0; i < values.length; i++) {
         element.appendChild(
           this._renderElementValues(this.newItemTemplateElement, values[i])

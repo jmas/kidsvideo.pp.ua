@@ -5,6 +5,10 @@ customElements.define(
       super();
     }
 
+    static get observedAttributes() {
+      return ["filter"];
+    }
+
     get value() {
       return JSON.parse(this.textContent.trim());
     }
@@ -25,6 +29,15 @@ customElements.define(
       return this.getAttribute("filter") || "true";
     }
 
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue) {
+        return;
+      }
+      if (name === "filter") {
+        this._changeListener();
+      }
+    }
+
     connectedCallback() {
       if (!this.fromElement) {
         console.warn(
@@ -40,18 +53,14 @@ customElements.define(
     }
 
     _addDataListeners = () => {
-      this.fromElement.addEventListener(
-        "change",
-        this._dataChangeListener,
-        true
-      );
+      this.fromElement.addEventListener("change", this._changeListener, true);
     };
 
     _removeDataListeners = () => {
-      this.fromElement.removeEventListener("change", this._dataChangeListener);
+      this.fromElement.removeEventListener("change", this._changeListener);
     };
 
-    _dataChangeListener = () => {
+    _changeListener = () => {
       this._render(this._filter(this.fromValue, this.filter));
       this._dispatchChangeEvent();
     };

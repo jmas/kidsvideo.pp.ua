@@ -58,6 +58,9 @@ customElements.define(
     };
 
     _shuffle = (values, groupBy) => {
+      if (values.length === 0) {
+        return [];
+      }
       const shuffled = [];
       const grouped = groupBy
         .map((groupKey) => {
