@@ -31,7 +31,7 @@ customElements.define(
         }
         return override;
       })();
-      this._fetch(videoId).then((data) =>
+      this._fetchOrGetFromCache(videoId).then((data) =>
         this._render(videoId, {
           ...data,
           ...override,
@@ -43,6 +43,18 @@ customElements.define(
       return fetch(
         `https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=${videoId}`
       ).then((response) => response.json());
+    };
+
+    _fetchOrGetFromCache = (videoId) => {
+      const fromCache = localStorage[`yt_video_${videoId}_cache`];
+      if (fromCache) {
+        return Promise.resolve(JSON.parse(fromCache));
+      } else {
+        return this._fetch(videoId).then((data) => {
+          localStorage[`yt_video_${videoId}_cache`] = JSON.stringify(data);
+          return data;
+        });
+      }
     };
 
     _render = (videoId, { title, thumbnail_url }) => {
