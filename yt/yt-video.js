@@ -13,17 +13,30 @@ customElements.define(
       return this.getAttribute("video-id");
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-      if (oldValue === newValue) {
-        return;
-      }
-      if (name === "video-id") {
+    get title() {
+      return this.getAttribute("title");
+    }
+
+    connectedCallback() {
+      if (this.videoId) {
         this._fetchAndRender(this.videoId);
       }
     }
 
     _fetchAndRender = (videoId) => {
-      this._fetch(videoId).then((data) => this._render(videoId, data));
+      const override = (() => {
+        const override = {};
+        if (this.title) {
+          override.title = this.title;
+        }
+        return override;
+      })();
+      this._fetch(videoId).then((data) =>
+        this._render(videoId, {
+          ...data,
+          ...override,
+        })
+      );
     };
 
     _fetch = (videoId) => {

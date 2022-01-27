@@ -96,21 +96,18 @@
         />
       </div>
     </header>
+
     <div class="container">
       <h1>Kids Video — развивающие видео для детей и их родителей</h1>
       <p>
         На этом сайте можно найти развивающие видео с YouTube для детей и их
-        родителей. Особенностью данного сайта является категоризация YouTube
-        каналов по таким параметрам, как возраст ребенка и пол. Например, можно
-        легко найти <a href="#">каналы для девочек шести лет</a>. Другим
-        положительным моментом является значительное уменьшение количества
-        рекламы в роликах по сравнению с просмотром на YouTube.
+        родителей. Особенностью данного сайта является удобный фильтр каналов по
+        полу и возрасту. Другим положительным моментом является значительное
+        уменьшение количества рекламы в роликах по сравнению с просмотром на
+        YouTube.
       </p>
       <p>
-        Если после просмотра вы не согласны с рейтингом канала — его можно
-        пересмотреть, заполнив «<a href="#"
-          >форму для пересмотра рейтинга канала</a
-        >». Если вы хотите добавить канал — воспользуйтесь «<a href="#"
+        Если вы хотите добавить канал — воспользуйтесь «<a href="#"
           >формой для добавления канала</a
         >».
       </p>
@@ -119,10 +116,39 @@
         канал и приступайте к просмотру!
       </p>
     </div>
+
     <main>
       <div class="container">
+        <!--
+        <form class="controls">
+          <label class="controls-item">
+            <div class="controls-control">
+              <input type="checkbox" name="male" value="1" checked />
+            </div>
+            <div class="controls-caption">Девочкам</div>
+          </label>
+          <label class="controls-item">
+            <div class="controls-control">
+              <input type="checkbox" name="female" value="1" checked />
+            </div>
+            <div class="controls-caption">Мальчикам</div>
+          </label>
+          <label class="controls-item">
+            <div class="controls-control">
+              <input type="checkbox" name="family" value="1" checked />
+            </div>
+            <div class="controls-caption">Семейные</div>
+          </label>
+          <label class="controls-item">
+            <div class="controls-control">
+              <input type="checkbox" name="family" value="1" checked />
+            </div>
+            <div class="controls-caption">Малышам</div>
+          </label>
+        </form>
+        -->
         <gsh-list
-          from-data="#videos-data"
+          from-data="#videos-channels-filtered-shuffled-data"
           item-template="#videos-item"
           render-into="#videos-list"
         >
@@ -130,6 +156,7 @@
         </gsh-list>
       </div>
     </main>
+
     <footer>
       <div class="container">
         Разработка и поддержка
@@ -139,7 +166,7 @@
 
     <!-- Templates -->
     <template id="videos-item">
-      <yt-video data-insert-video-id="${videoId}"></yt-video>
+      <yt-video insert-video-id="${videoId}"></yt-video>
     </template>
 
     <!-- Data -->
@@ -151,10 +178,47 @@
     >
       []
     </gsh-data>
+    <gsh-data
+      document-id="1ZJ8SjPup1dadvJNpOXatiVyKeNV8Kf8K8jtJggkewlU"
+      sheet="channels"
+      id="channels-data"
+      hidden
+    >
+      []
+    </gsh-data>
+    <gsh-join
+      from-left="#videos-data"
+      from-right="#channels-data"
+      by="left.channelId === right.channelId"
+      when="left.length > 0 && right.length > 0"
+      id="videos-channels-data"
+      hidden
+    >
+      []
+    </gsh-join>
+    <gsh-filter
+      from="#videos-channels-data"
+      filter="true"
+      id="videos-channels-filtered-data"
+      hidden
+    >
+      []
+    </gsh-filter>
+    <gsh-shuffler
+      from="#videos-channels-filtered-data"
+      group-by="male female family baby"
+      id="videos-channels-filtered-shuffled-data"
+      hidden
+    >
+      []
+    </gsh-shuffler>
 
     <!-- Scripts -->
     <script src="gsh/gsh-list.js" defer></script>
     <script src="gsh/gsh-data.js" defer></script>
+    <script src="gsh/gsh-join.js" defer></script>
+    <script src="gsh/gsh-filter.js" defer></script>
+    <script src="gsh/gsh-shuffler.js" defer></script>
     <script src="yt/yt-video.js" defer></script>
   </body>
 </html>

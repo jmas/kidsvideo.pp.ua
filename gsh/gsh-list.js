@@ -31,7 +31,7 @@ customElements.define(
     }
 
     get fromDataValues() {
-      return JSON.parse(this.fromDataElement.textContent.trim());
+      return this.fromDataElement.value || [];
     }
 
     connectedCallback() {
@@ -45,7 +45,7 @@ customElements.define(
 
     _attachFromDataListener = () => {
       this.fromDataElement.addEventListener(
-        "load",
+        "change",
         this._fromDataLoadListener,
         true
       );
@@ -58,7 +58,7 @@ customElements.define(
 
     _detachFromDataListener() {
       this.fromDataElement.removeEventListener(
-        "load",
+        "change",
         this._fromDataLoadListener
       );
       this.fromDataElement.removeEventListener(
@@ -67,8 +67,8 @@ customElements.define(
       );
     }
 
-    _fromDataLoadListener = (event) => {
-      this._render(this.renderIntoElement, event.detail.values);
+    _fromDataLoadListener = () => {
+      this._render(this.renderIntoElement, this.fromDataValues);
     };
 
     _fromDataErrorListener = (event) => {
@@ -80,36 +80,44 @@ customElements.define(
         element.removeChild(element.children[i]);
       }
       for (let i = 0; i < values.length; i++) {
-        element.appendChild(this.newItemTemplateElement);
-        this._renderElementValues(element.lastElementChild, values[i]);
+        element.appendChild(
+          this._renderElementValues(this.newItemTemplateElement, values[i])
+        );
       }
     };
 
     _renderElementValues(element, values) {
-      this._findAllDataInsertNodes(element).forEach((currentNode) => {
-        const attributes = Array.from(currentNode.attributes);
-        for (let i = 0; i < attributes.length; i++) {
-          const attribute = attributes[i].name;
-          if (attribute.startsWith("data-insert")) {
-            const insertIntoAttr = attribute.substring(12);
-            if (insertIntoAttr === "") {
-              currentNode.textContent = this._interpolateString(
-                currentNode.getAttribute(attribute),
-                values
-              );
-            } else {
-              currentNode.setAttribute(
-                insertIntoAttr,
-                this._interpolateString(
-                  currentNode.getAttribute(attribute),
+      Array.from(element.querySelectorAll("*"))
+        .filter((element) =>
+          Array.from(element.attributes).some((attribute) =>
+            attribute.name.startsWith("insert")
+          )
+        )
+        .forEach((element) => {
+          const attributes = Array.from(element.attributes);
+          for (let i = 0; i < attributes.length; i++) {
+            const attribute = attributes[i].name;
+            if (attribute.startsWith("insert")) {
+              const insertIntoAttr = attribute.substring(7);
+              if (insertIntoAttr === "") {
+                element.textContent = this._interpolateString(
+                  element.getAttribute(attribute),
                   values
-                )
-              );
+                );
+              } else {
+                element.setAttribute(
+                  insertIntoAttr,
+                  this._interpolateString(
+                    element.getAttribute(attribute),
+                    values
+                  )
+                );
+              }
+              element.removeAttribute(attribute);
             }
-            currentNode.removeAttribute(attribute);
           }
-        }
-      });
+        });
+      return element;
     }
 
     _findAllDataInsertNodes = (element) => {

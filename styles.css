@@ -131,8 +131,8 @@ footer {
   padding: 0.5rem;
   border-radius: 0.5rem;
   transition: 0.3s;
-  background-color: rgba(var(--link), 0.025);
   transition-property: color, outline;
+  background-color: rgba(var(--link), 0.025);
   outline: 1px solid rgba(var(--link), 0);
   outline-offset: -1px;
 }
@@ -173,4 +173,56 @@ footer {
 
 .video-list a span::first-letter {
   text-transform: uppercase;
+}
+
+.controls {
+  background-color: rgba(var(--link), 0.025);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: nowrap;
+  outline: 1px solid rgba(var(--link), 0.25);
+}
+
+.controls-item {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin-right: 1rem;
+  padding: 0.5rem;
+  transition: 0.3s;
+  transition-property: color, outline;
+  outline: 1px solid rgba(var(--link), 0);
+  outline-offset: -1px;
+  border-radius: 0.5rem;
+  user-select: none;
+}
+
+.controls-item:last-child {
+  margin-right: 0;
+}
+
+.controls-item:hover {
+  outline: 1px solid rgba(var(--link), 0.25);
+}
+
+.controls-control {
+  flex-grow: 1;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.controls-control > * {
+  flex-grow: 1;
+}
+
+.controls-caption {
+  flex-grow: 0;
+  text-align: center;
+  font-size: 80%;
+  font-weight: bold;
 }

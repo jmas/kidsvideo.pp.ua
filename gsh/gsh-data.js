@@ -9,6 +9,10 @@ customElements.define(
       return ["document-id", "sheet"];
     }
 
+    get value() {
+      return JSON.parse(this.textContent.trim());
+    }
+
     connectedCallback() {
       this._fetchAndRender(
         this.getAttribute("document-id"),
@@ -27,10 +31,10 @@ customElements.define(
       )
         .then((values) => {
           this._render(this, values);
-          this._dispatchLoaded(values);
+          this._dispatchChangeEvent();
         })
         .catch((error) => {
-          this._dispatchError(error);
+          this._dispatchErrorEvent(error);
         });
     };
 
@@ -86,17 +90,11 @@ customElements.define(
       element.textContent = JSON.stringify(values);
     };
 
-    _dispatchLoaded = (values) => {
-      this.dispatchEvent(
-        new CustomEvent("load", {
-          detail: {
-            values,
-          },
-        })
-      );
+    _dispatchChangeEvent = () => {
+      this.dispatchEvent(new CustomEvent("change"));
     };
 
-    _dispatchError = (error) => {
+    _dispatchErrorEvent = (error) => {
       this.dispatchEvent(
         new CustomEvent("error", {
           detail: {
