@@ -13,6 +13,10 @@ customElements.define(
       return JSON.parse(this.textContent.trim());
     }
 
+    get reverse() {
+      return this.getAttribute("reverse") !== null;
+    }
+
     connectedCallback() {
       this._fetchAndRender(
         this.getAttribute("document-id"),
@@ -51,7 +55,13 @@ customElements.define(
               )[1]
             ).table
         )
-        .then(this._formatSheetValues);
+        .then(this._formatSheetValues)
+        .then((values) => {
+          if (this.reverse) {
+            return values.reverse();
+          }
+          return values;
+        });
     };
 
     _formatSheetValues = ({ cols, rows }) => {
