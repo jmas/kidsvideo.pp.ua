@@ -17,6 +17,12 @@ customElements.define(
       return this.getAttribute("reverse") !== null;
     }
 
+    get types() {
+      return Object.fromEntries(
+        new URLSearchParams(this.getAttribute("types") || "")
+      );
+    }
+
     connectedCallback() {
       this._fetchAndRender(
         this.getAttribute("document-id"),
@@ -55,13 +61,7 @@ customElements.define(
               )[1]
             ).table
         )
-        .then(this._formatSheetValues)
-        .then((values) => {
-          if (this.reverse) {
-            return values.reverse();
-          }
-          return values;
-        });
+        .then(this._formatSheetValues);
     };
 
     _formatSheetValues = ({ cols, rows }) => {

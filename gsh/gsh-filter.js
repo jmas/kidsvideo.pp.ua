@@ -29,6 +29,14 @@ customElements.define(
       return this.getAttribute("filter") || "true";
     }
 
+    get sortBy() {
+      return this.getAttribute("sort-by");
+    }
+
+    get sortOrder() {
+      return this.getAttribute("sort-order") || "asc";
+    }
+
     attributeChangedCallback(name, oldValue, newValue) {
       if (oldValue === newValue) {
         return;
@@ -61,15 +69,35 @@ customElements.define(
     };
 
     _changeListener = () => {
-      this._render(this._filter(this.fromValue, this.filter));
+      this._render(
+        this._filter(this.fromValue, this.filter, this.sortBy, this.sortOrder)
+      );
       this._dispatchChangeEvent();
     };
 
-    _filter = (values, filter) => {
+    _filter = (values, filter, sortBy, sortOrder) => {
       const filterFunction = (item) => {
         return new Function("item", `return ${filter};`)(item);
       };
-      return values.filter(filterFunction);
+      if (sortBy) {
+        values = values.sort((a, b) => {
+          let valueA = a[sortBy];
+          let valueB = b[sortBy];
+          if (
+            String(valueA).startsWith("Date") &&
+            String(valueB).startsWith("Date")
+          ) {
+            valueA = new Function(`return new ${valueA};`)().getTime();
+            valueB = new Function(`return new ${valueB};`)().getTime();
+          }
+          if (sortOrder === "asc") {
+            return valueA - valueB;
+          }
+          return valueB - valueA;
+        });
+      }
+      values = values.filter(filterFunction);
+      return values;
     };
 
     _render = (value) => {
