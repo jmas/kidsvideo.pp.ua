@@ -171,7 +171,7 @@
           </label>
         </form>
         <gsh-list
-          from-data="#videos-channels-filtered-shuffled-data"
+          from-data="#videos-channels-filtered-shuffled-paginated-data"
           item-template="#videos-item"
           render-into="#videos-list"
         >
@@ -240,6 +240,15 @@
     >
       []
     </gsh-shuffler>
+    <gsh-paginator
+      from="#videos-channels-filtered-data"
+      offset="0"
+      limit="24"
+      id="videos-channels-filtered-shuffled-paginated-data"
+      hidden
+    >
+      []
+    </gsh-paginator>
 
     <!-- Scripts -->
     <script src="main.js" defer></script>
@@ -248,6 +257,7 @@
     <script src="gsh/gsh-join.js" defer></script>
     <script src="gsh/gsh-filter.js" defer></script>
     <script src="gsh/gsh-shuffler.js" defer></script>
+    <script src="gsh/gsh-paginator.js" defer></script>
     <script src="yt/yt-video.js" defer></script>
     <script src="ui/ui-panel.js" defer></script>
   </body>

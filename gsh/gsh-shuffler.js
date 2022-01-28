@@ -89,6 +89,13 @@ customElements.define(
         }
       }
       return shuffled.filter(Boolean);
+      // .filter(
+      //   (value, index, self) =>
+      //     index ===
+      //     self.findIndex(
+      //       (item) => item.place === value.place
+      //     )
+      // );
     };
 
     _render = (value) => {
