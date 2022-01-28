@@ -76,9 +76,6 @@ customElements.define(
     };
 
     _filter = (values, filter, sortBy, sortOrder) => {
-      const filterFunction = (item) => {
-        return new Function("item", `return ${filter};`)(item);
-      };
       if (sortBy) {
         values = values.sort((a, b) => {
           let valueA = a[sortBy];
@@ -96,8 +93,13 @@ customElements.define(
           return valueB - valueA;
         });
       }
-      values = values.filter(filterFunction);
-      return values;
+      if (filter) {
+        const filterFunction = (item) => {
+          return new Function("item", `return ${filter};`)(item);
+        };
+        values = values.filter(filterFunction);
+      }
+      return values.filter(filterFunction);
     };
 
     _render = (value) => {
