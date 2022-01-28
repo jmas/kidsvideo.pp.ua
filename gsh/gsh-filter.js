@@ -99,7 +99,7 @@ customElements.define(
         };
         values = values.filter(filterFunction);
       }
-      return values.filter(filterFunction);
+      return values;
     };
 
     _render = (value) => {
