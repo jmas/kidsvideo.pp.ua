@@ -18,10 +18,30 @@ customElements.define(
     }
 
     connectedCallback() {
-      if (this.videoId) {
-        this._fetchAndRender(this.videoId);
-      }
+      this._renderPlaceholder();
+      this._addIntersectionObserver();
     }
+
+    _addIntersectionObserver = () => {
+      this._intersectionObserver = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            if (this.videoId) {
+              this._fetchAndRender(this.videoId);
+            }
+          }
+        },
+        {
+          threshold: [0],
+        }
+      );
+      this._intersectionObserver.observe(this);
+    };
+
+    _removeIntersectionObserver = () => {
+      this._intersectionObserver.unobserve(this);
+      this._intersectionObserver = undefined;
+    };
 
     _fetchAndRender = (videoId) => {
       const override = (() => {
@@ -57,6 +77,10 @@ customElements.define(
       }
     };
 
+    _renderPlaceholder = () => {
+      this.innerHTML = `<span class="placeholder"></span>`;
+    };
+
     _render = (videoId, { title, thumbnail_url }) => {
       this.innerHTML = `
         <a
@@ -65,6 +89,7 @@ customElements.define(
         >
           <img
             src="${thumbnail_url}"
+            loading="lazy"
             alt="${title}"
           />
           <span>${title}</span>

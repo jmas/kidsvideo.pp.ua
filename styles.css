@@ -175,6 +175,12 @@ footer {
   display: block;
 }
 
+.video-list .placeholder {
+  display: block;
+  aspect-ratio: 16/8.8;
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
 .controls {
   background-color: rgba(var(--link), 0.025);
   padding: 1rem;
