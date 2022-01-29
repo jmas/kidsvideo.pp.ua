@@ -13,18 +13,25 @@ const applyFilter = () => {
   const videosFilter = document.getElementById("videos-channels-filtered-data");
   const channelsFilter = document.getElementById("channels-filtered-data");
   const topics = getCheckedValues(topicsForm, "topics[]");
-  const channels = getCheckedValues(channelsForm, "channels[]");
-  const topicsFilterValue = `${topics
-    .map((value) => `item.${value} == '1'`)
-    .join(" || ")}`;
-  const channelsFilterValue = `[${channels
-    .map((channelId) => `'${channelId}'`)
-    .join(",")}].some(channelId => channelId === item.channelId)`;
-  videosFilter.setAttribute(
-    "filter",
-    `(${topicsFilterValue}) && ${channelsFilterValue}`
-  );
+
+  const topicsFilterValue =
+    topics.length > 0
+      ? `(${topics.map((value) => `item.${value} == '1'`).join(" || ")})`
+      : "false";
+
   channelsFilter.setAttribute("filter", topicsFilterValue);
+
+  setTimeout(() => {
+    const channels = getCheckedValues(channelsForm, "channels[]");
+    const channelsFilterValue = `[${channels
+      .map((channelId) => `'${channelId}'`)
+      .join(",")}].some(channelId => channelId === item.channelId)`;
+
+    videosFilter.setAttribute(
+      "filter",
+      [topicsFilterValue, channelsFilterValue].filter(Boolean).join(" && ")
+    );
+  }, 100);
 };
 
 const addTopicsFilterListener = () => {
@@ -32,7 +39,9 @@ const addTopicsFilterListener = () => {
   form.addEventListener(
     "change",
     () => {
-      applyFilter();
+      setTimeout(() => {
+        applyFilter();
+      }, 200);
     },
     true
   );
@@ -43,7 +52,9 @@ const addChannelsFilterListener = () => {
   form.addEventListener(
     "change",
     () => {
-      applyFilter();
+      setTimeout(() => {
+        applyFilter();
+      }, 200);
     },
     true
   );
@@ -106,6 +117,12 @@ const addNextButtonListener = () => {
     () => {
       const limit = Number(paginator.getAttribute("limit"));
       paginator.setAttribute("limit", limit + initialLimit);
+      setTimeout(() => {
+        document
+          .getElementById("videos-list")
+          .querySelector(`yt-video:nth-child(${limit})`)
+          .scrollIntoView({ block: "start", behavior: "auto" });
+      }, 200);
     },
     true
   );
@@ -116,7 +133,6 @@ const main = () => {
   addTopicsFilterListener();
   addChannelsFilterListener();
   addNextButtonListener();
-  // addScrollFooterListener();
 };
 
 main();

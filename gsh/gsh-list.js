@@ -91,27 +91,9 @@ customElements.define(
     };
 
     _render = (element, values) => {
-      const exclude = [];
-      Array.from(element.children).forEach((child) => {
-        if (this.compare) {
-          const [attr, key] = this.compare;
-          const attrElement = element.querySelector(`[${attr}]`);
-          if (attrElement) {
-            const attrValue = attrElement.getAttribute(attr);
-            const index = values.findIndex((value) => attrValue == value[key]);
-            if (index) {
-              exclude.push(index);
-              return;
-            }
-          }
-        }
-        element.removeChild(child);
-      });
+      element.textContent = "";
       const fragment = document.createDocumentFragment();
       for (let i = 0; i < values.length; i++) {
-        if (exclude.includes(i)) {
-          continue;
-        }
         fragment.appendChild(
           this._renderElementValues(this.newItemTemplateElement, values[i])
         );
