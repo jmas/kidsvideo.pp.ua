@@ -1,28 +1,39 @@
-const applyContentFilter = () => {
-  const form = document.getElementById("content-filter-form");
-  const videosFilter = document.getElementById("videos-channels-filtered-data");
-  const channelsFilter = document.getElementById("channels-filtered-data");
-  const elements = Array.from(form.elements);
-  const conditionItems = [];
-  elements.forEach((element) => {
-    if (element.type === "checkbox" && element.checked) {
-      conditionItems.push([element.name, element.value]);
+const getCheckedValues = (form, name) => {
+  return Array.from(form.elements).reduce((values, element) => {
+    if (element.name === name && element.checked) {
+      values.push(element.value);
     }
-  });
-  const filterValue = conditionItems
-    .map(([name, value]) => `item.${name} == '${value}'`)
-    .join(" || ");
-  videosFilter.setAttribute("filter", filterValue);
-  channelsFilter.setAttribute("filter", filterValue);
+    return values;
+  }, []);
 };
 
-const addContentFilterListener = () => {
-  const form = document.getElementById("content-filter-form");
+const applyFilter = () => {
+  const topicsForm = document.getElementById("topics-filter-form");
+  const channelsForm = document.getElementById("channels-filter-form");
+  const videosFilter = document.getElementById("videos-channels-filtered-data");
+  const channelsFilter = document.getElementById("channels-filtered-data");
+  const topics = getCheckedValues(topicsForm, "topics[]");
+  const channels = getCheckedValues(channelsForm, "channels[]");
+  const topicsFilterValue = `${topics
+    .map((value) => `item.${value} == '1'`)
+    .join(" || ")}`;
+  const channelsFilterValue = `[${channels
+    .map((channelId) => `'${channelId}'`)
+    .join(",")}].some(channelId => channelId === item.channelId)`;
+  videosFilter.setAttribute(
+    "filter",
+    `(${topicsFilterValue}) && ${channelsFilterValue}`
+  );
+  channelsFilter.setAttribute("filter", topicsFilterValue);
+};
+
+const addTopicsFilterListener = () => {
+  const form = document.getElementById("topics-filter-form");
   form.addEventListener(
     "change",
     () => {
       setTimeout(() => {
-        applyContentFilter();
+        applyFilter();
       }, 300);
     },
     true
@@ -34,10 +45,20 @@ const addChannelsFilterListener = () => {
   form.addEventListener(
     "change",
     () => {
-      console.log("applyChannelsFilter");
+      setTimeout(() => {
+        applyFilter();
+      }, 300);
     },
     true
   );
+};
+
+const addFilterApplier = () => {
+  document.getElementById("channels-data").addEventListener("change", () => {
+    setTimeout(() => {
+      applyFilter();
+    }, 300);
+  });
 };
 
 const addVideoClickListener = () => {
@@ -65,9 +86,10 @@ const addVideoClickListener = () => {
 
 const main = () => {
   addVideoClickListener();
-  addContentFilterListener();
+  addTopicsFilterListener();
   addChannelsFilterListener();
-  applyContentFilter();
+  addFilterApplier();
+  // applyFilter();
 };
 
 main();

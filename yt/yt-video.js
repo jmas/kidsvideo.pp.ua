@@ -18,8 +18,8 @@ customElements.define(
       return this.getAttribute("title");
     }
 
-    get channelPic() {
-      return this.getAttribute("channel-pic");
+    get channelPicture() {
+      return this.getAttribute("channel-picture");
     }
 
     connectedCallback() {
@@ -94,15 +94,17 @@ customElements.define(
           href="https://www.youtube.com/watch?v=${videoId}"
           target="_blank"
         >
-          <img
-            src="${thumbnail_url}"
-            loading="lazy"
-            alt="${title}"
-          />
+          <span style="background-image: url(${thumbnail_url});">
+            <img
+              src="${thumbnail_url}"
+              loading="lazy"
+              alt="${title}"
+            />
+          </span>
           <span>
             ${
-              this.channelPic
-                ? `<img src="${this.channelPic}" loading="lazy" alt="Channel" />`
+              this.channelPicture
+                ? `<span style="background-image: url(${this.channelPicture});"></span>`
                 : ""
             }
             <span>${title}</span>

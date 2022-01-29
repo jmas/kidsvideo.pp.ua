@@ -123,11 +123,11 @@
       </div>
 
       <div class="container">
-        <form id="content-filter-form" class="controls">
+        <form id="topics-filter-form" class="controls">
           <label class="controls-item">
             <div class="controls-control">
               <label class="switch">
-                <input type="checkbox" name="baby" value="1" checked />
+                <input type="checkbox" name="topics[]" value="baby" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -136,7 +136,7 @@
           <label class="controls-item">
             <div class="controls-control">
               <label class="switch">
-                <input type="checkbox" name="female" value="1" checked />
+                <input type="checkbox" name="topics[]" value="female" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -145,7 +145,7 @@
           <label class="controls-item">
             <div class="controls-control">
               <label class="switch">
-                <input type="checkbox" name="male" value="1" checked />
+                <input type="checkbox" name="topics[]" value="male" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -154,7 +154,7 @@
           <label class="controls-item">
             <div class="controls-control">
               <label class="switch">
-                <input type="checkbox" name="family" value="1" checked />
+                <input type="checkbox" name="topics[]" value="family" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -163,7 +163,7 @@
           <label class="controls-item">
             <div class="controls-control">
               <label class="switch">
-                <input type="checkbox" name="diy" value="1" checked />
+                <input type="checkbox" name="topics[]" value="diy" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -227,17 +227,17 @@
     <template id="videos-item">
       <yt-video
         insert-video-id="${videoId}"
-        insert-channel-pic="${channelPicture}"
+        insert-channel-picture="${channelPicture}"
       ></yt-video>
     </template>
     <template id="channels-item">
       <label class="channels-item">
-        <img insert-src="${channelPicture}" insert-alt="${channelName}" />
+        <span insert-style="background-image: url(${channelPicture});"></span>
         <span insert="${channelName}" insert-title="${channelName}"></span>
         <label class="switch switch-small">
           <input
             type="checkbox"
-            name="channels"
+            name="channels[]"
             insert-value="${channelId}"
             checked
           />
