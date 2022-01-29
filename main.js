@@ -84,8 +84,7 @@ const main = () => {
   addVideoClickListener();
   addTopicsFilterListener();
   addChannelsFilterListener();
-  addFilterApplier();
-  // applyFilter();
+  applyFilter();
 };
 
 main();
