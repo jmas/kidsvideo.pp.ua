@@ -30,6 +30,14 @@ customElements.define(
       return this.fromDataElement.value || [];
     }
 
+    get compare() {
+      const compare = this.getAttribute("compare");
+      if (compare) {
+        return compare.split(" ");
+      }
+      return null;
+    }
+
     connectedCallback() {
       if (!this.fromDataElement) {
         console.warn(
@@ -83,9 +91,27 @@ customElements.define(
     };
 
     _render = (element, values) => {
-      element.innerText = "";
+      const exclude = [];
+      Array.from(element.children).forEach((child) => {
+        if (this.compare) {
+          const [attr, key] = this.compare;
+          const attrElement = element.querySelector(`[${attr}]`);
+          if (attrElement) {
+            const attrValue = attrElement.getAttribute(attr);
+            const index = values.findIndex((value) => attrValue == value[key]);
+            if (index) {
+              exclude.push(index);
+              return;
+            }
+          }
+        }
+        element.removeChild(child);
+      });
       const fragment = document.createDocumentFragment();
       for (let i = 0; i < values.length; i++) {
+        if (exclude.includes(i)) {
+          continue;
+        }
         fragment.appendChild(
           this._renderElementValues(this.newItemTemplateElement, values[i])
         );
