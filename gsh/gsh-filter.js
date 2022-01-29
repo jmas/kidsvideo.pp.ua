@@ -3,6 +3,7 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
+      this._value = [];
     }
 
     static get observedAttributes() {
@@ -10,7 +11,11 @@ customElements.define(
     }
 
     get value() {
-      return JSON.parse(this.textContent.trim());
+      return this._value;
+    }
+
+    set value(value) {
+      this._value = value;
     }
 
     get from() {
@@ -57,6 +62,7 @@ customElements.define(
     }
 
     disconnectedCallback() {
+      this._value = undefined;
       this._removeDataListeners();
     }
 
@@ -69,8 +75,11 @@ customElements.define(
     };
 
     _changeListener = () => {
-      this._render(
-        this._filter(this.fromValue, this.filter, this.sortBy, this.sortOrder)
+      this.value = this._filter(
+        this.fromValue,
+        this.filter,
+        this.sortBy,
+        this.sortOrder
       );
       this._dispatchChangeEvent();
     };
@@ -100,10 +109,6 @@ customElements.define(
         values = values.filter(filterFunction);
       }
       return values;
-    };
-
-    _render = (value) => {
-      this.textContent = JSON.stringify(value);
     };
 
     _dispatchChangeEvent = () => {

@@ -3,10 +3,15 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
+      this._value = [];
     }
 
     get value() {
-      return JSON.parse(this.textContent.trim());
+      return this._value;
+    }
+
+    set value(value) {
+      this._value = value;
     }
 
     get from() {
@@ -53,7 +58,7 @@ customElements.define(
     };
 
     _dataChangeListener = () => {
-      this._render(this._shuffle(this.fromValue, this.groupBy));
+      this.value = this._shuffle(this.fromValue, this.groupBy);
       this._dispatchChangeEvent();
     };
 
@@ -96,10 +101,6 @@ customElements.define(
       //       (item) => item.place === value.place
       //     )
       // );
-    };
-
-    _render = (value) => {
-      this.textContent = JSON.stringify(value);
     };
 
     _dispatchChangeEvent = () => {

@@ -201,17 +201,13 @@
       sheet="videos"
       id="videos-data"
       hidden
-    >
-      []
-    </gsh-data>
+    ></gsh-data>
     <gsh-data
       document-id="1ZJ8SjPup1dadvJNpOXatiVyKeNV8Kf8K8jtJggkewlU"
       sheet="channels"
       id="channels-data"
       hidden
-    >
-      []
-    </gsh-data>
+    ></gsh-data>
     <gsh-join
       from-left="#videos-data"
       from-right="#channels-data"
@@ -219,9 +215,7 @@
       when="left.length > 0 && right.length > 0"
       id="videos-channels-data"
       hidden
-    >
-      []
-    </gsh-join>
+    ></gsh-join>
     <gsh-filter
       from="#videos-channels-data"
       filter="true"
@@ -229,26 +223,20 @@
       sort-order="desc"
       id="videos-channels-filtered-data"
       hidden
-    >
-      []
-    </gsh-filter>
+    ></gsh-filter>
     <gsh-shuffler
       from="#videos-channels-filtered-data"
       group-by="male female family baby diy"
       id="videos-channels-filtered-shuffled-data"
       hidden
-    >
-      []
-    </gsh-shuffler>
+    ></gsh-shuffler>
     <gsh-paginator
       from="#videos-channels-filtered-data"
       offset="0"
       limit="24"
       id="videos-channels-filtered-shuffled-paginated-data"
       hidden
-    >
-      []
-    </gsh-paginator>
+    ></gsh-paginator>
 
     <!-- Scripts -->
     <script src="main.js" defer></script>

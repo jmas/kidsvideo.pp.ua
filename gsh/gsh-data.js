@@ -3,6 +3,7 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
+      this._value = [];
     }
 
     static get observedAttributes() {
@@ -10,7 +11,11 @@ customElements.define(
     }
 
     get value() {
-      return JSON.parse(this.textContent.trim());
+      return this._value;
+    }
+
+    set value(value) {
+      this._value = value;
     }
 
     get reverse() {
@@ -30,6 +35,10 @@ customElements.define(
       );
     }
 
+    disconnectedCallback() {
+      this._value = undefined;
+    }
+
     _fetchAndRender = (documentId, sheet) => {
       const sheets = sheet.split(" ");
 
@@ -40,7 +49,7 @@ customElements.define(
         : this._fetchSheetValues(documentId, sheet)
       )
         .then((values) => {
-          this._render(this, values);
+          this.value = values;
           this._dispatchChangeEvent();
         })
         .catch((error) => {
@@ -94,10 +103,6 @@ customElements.define(
         items.push(item);
       }
       return items;
-    };
-
-    _render = (element, values) => {
-      element.textContent = JSON.stringify(values);
     };
 
     _dispatchChangeEvent = () => {

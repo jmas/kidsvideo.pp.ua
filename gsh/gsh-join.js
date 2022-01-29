@@ -3,10 +3,15 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
+      this._value = [];
     }
 
     get value() {
-      return JSON.parse(this.textContent.trim());
+      return this._value;
+    }
+
+    set value(value) {
+      this._value = value;
     }
 
     get fromLeft() {
@@ -88,7 +93,7 @@ customElements.define(
         `return ${this.when};`
       );
       if (whenCondition(left, right)) {
-        this._render(this._join(this.leftValue, this.rightValue, this.by));
+        this.value = this._join(this.leftValue, this.rightValue, this.by);
         this._dispatchChangeEvent();
       }
     };
@@ -107,10 +112,6 @@ customElements.define(
           ...right.find((rightItem) => byEqualFunction(leftItem, rightItem)),
         };
       });
-    };
-
-    _render = (value) => {
-      this.textContent = JSON.stringify(value);
     };
 
     _dispatchChangeEvent = () => {

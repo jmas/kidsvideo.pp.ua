@@ -88,11 +88,13 @@ customElements.define(
 
     _render = (element, values) => {
       element.innerText = "";
+      const fragment = document.createDocumentFragment();
       for (let i = 0; i < values.length; i++) {
-        element.appendChild(
+        fragment.appendChild(
           this._renderElementValues(this.newItemTemplateElement, values[i])
         );
       }
+      element.appendChild(fragment);
     };
 
     _renderElementValues(element, values) {
