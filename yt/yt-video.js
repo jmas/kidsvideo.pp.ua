@@ -3,6 +3,7 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
+      this._fetching = false;
     }
 
     static get observedAttributes() {
@@ -30,7 +31,7 @@ customElements.define(
       this._intersectionObserver = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting) {
-            if (this.videoId) {
+            if (this.videoId && !this._fetching) {
               this._fetchAndRender(this.videoId);
             }
           }
@@ -48,6 +49,7 @@ customElements.define(
     };
 
     _fetchAndRender = (videoId) => {
+      this._fetching = true;
       const override = (() => {
         const override = {};
         if (this.title) {
@@ -55,12 +57,13 @@ customElements.define(
         }
         return override;
       })();
-      this._fetchOrGetFromCache(videoId).then((data) =>
+      this._fetchOrGetFromCache(videoId).then((data) => {
         this._render(videoId, {
           ...data,
           ...override,
-        })
-      );
+        });
+        this._fetching = false;
+      });
     };
 
     _fetch = (videoId) => {
