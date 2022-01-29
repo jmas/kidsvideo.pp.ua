@@ -303,3 +303,17 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.links {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+  font-size: 80%;
+}
+
+.links > li {
+  margin-inline: 1rem;
+  white-space: nowrap;
+}
