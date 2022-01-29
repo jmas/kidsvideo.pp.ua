@@ -58,6 +58,7 @@ details {
   transition: 0.3s;
   transition-property: color, box-shadow;
   background-color: transparent;
+  outline: none;
 }
 
 summary {
@@ -69,6 +70,7 @@ summary {
   color: rgb(var(--link));
   background-color: transparent;
   text-align: center;
+  outline: none;
 }
 
 details[open] summary {
