@@ -58,12 +58,14 @@ customElements.define(
     };
 
     _dataChangeListener = () => {
-      this.value = this._shuffle(this.fromValue, this.groupBy);
-      this._dispatchChangeEvent();
+      this._shuffle(this.fromValue, this.groupBy).then((values) => {
+        this.value = values;
+        this._dispatchChangeEvent();
+      });
     };
 
     _shuffle = (values, groupBy) => {
-      if (values.length === 0) {
+      const fnSource = `if (values.length === 0) {
         return [];
       }
       const shuffled = [];
@@ -93,7 +95,21 @@ customElements.define(
           }
         }
       }
-      return shuffled.filter(Boolean);
+      return shuffled.filter(Boolean);`;
+      const fnArgs = ["values", "groupBy"];
+      if ("Worker" in window) {
+        return new Promise((resolve) => {
+          const worker = new Worker("gsh/gsh-worker.js");
+          worker.onmessage = (event) => {
+            resolve(event.data);
+            worker.terminate();
+          };
+          worker.postMessage([fnSource, fnArgs, [values, groupBy]]);
+        });
+      } else {
+        const fn = new Function(...fnArgs, fnSource);
+        return Promise.resolve(fn(values, groupBy));
+      }
       // .filter(
       //   (value, index, self) =>
       //     index ===

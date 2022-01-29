@@ -57,14 +57,30 @@ customElements.define(
     };
 
     _dataChangeListener = () => {
-      this._render(this._paginate(this.fromValue, this.limit, this.offset));
-      this._dispatchChangeEvent();
+      this._paginate(this.fromValue, this.limit, this.offset).then((values) => {
+        this._render(values);
+        this._dispatchChangeEvent();
+      });
     };
 
     _paginate = (values, limit, offset) => {
-      const start = offset;
+      const fnSource = `const start = offset;
       const end = offset + limit;
-      return values.slice(start, end > values.length ? values.length : end);
+      return values.slice(start, end > values.length ? values.length : end);`;
+      const fnArgs = ["values", "limit", "offset"];
+      if ("Worker" in window) {
+        return new Promise((resolve) => {
+          const worker = new Worker("gsh/gsh-worker.js");
+          worker.onmessage = (event) => {
+            resolve(event.data);
+            worker.terminate();
+          };
+          worker.postMessage([fnSource, fnArgs, [values, limit, offset]]);
+        });
+      } else {
+        const fn = new Function(...fnArgs, fnSource);
+        return Promise.resolve(fn(values, limit, offset));
+      }
     };
 
     _render = (value) => {

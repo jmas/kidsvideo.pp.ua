@@ -32,9 +32,7 @@ const addTopicsFilterListener = () => {
   form.addEventListener(
     "change",
     () => {
-      setTimeout(() => {
-        applyFilter();
-      }, 300);
+      applyFilter();
     },
     true
   );
@@ -45,9 +43,7 @@ const addChannelsFilterListener = () => {
   form.addEventListener(
     "change",
     () => {
-      setTimeout(() => {
-        applyFilter();
-      }, 300);
+      applyFilter();
     },
     true
   );
@@ -55,9 +51,9 @@ const addChannelsFilterListener = () => {
 
 const addFilterApplier = () => {
   document.getElementById("channels-data").addEventListener("change", () => {
-    setTimeout(() => {
+    setIntermediate(() => {
       applyFilter();
-    }, 300);
+    });
   });
 };
 

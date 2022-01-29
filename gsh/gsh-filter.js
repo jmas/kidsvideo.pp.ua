@@ -75,17 +75,19 @@ customElements.define(
     };
 
     _changeListener = () => {
-      this.value = this._filter(
+      this._filter(
         this.fromValue,
         this.filter,
         this.sortBy,
         this.sortOrder
-      );
-      this._dispatchChangeEvent();
+      ).then((values) => {
+        this.value = values;
+        this._dispatchChangeEvent();
+      });
     };
 
     _filter = (values, filter, sortBy, sortOrder) => {
-      if (sortBy) {
+      const fnSource = `if (sortBy) {
         values = values.sort((a, b) => {
           let valueA = a[sortBy];
           let valueB = b[sortBy];
@@ -93,8 +95,8 @@ customElements.define(
             String(valueA).startsWith("Date") &&
             String(valueB).startsWith("Date")
           ) {
-            valueA = new Function(`return new ${valueA};`)().getTime();
-            valueB = new Function(`return new ${valueB};`)().getTime();
+            valueA = new Function(\`return new \${valueA};\`)().getTime();
+            valueB = new Function(\`return new \${valueB};\`)().getTime();
           }
           if (sortOrder === "asc") {
             return valueA - valueB;
@@ -104,11 +106,29 @@ customElements.define(
       }
       if (filter) {
         const filterFunction = (item) => {
-          return new Function("item", `return ${filter};`)(item);
+          return new Function("item", \`return \${filter};\`)(item);
         };
         values = values.filter(filterFunction);
       }
-      return values;
+      return values;`;
+      const fnArgs = ["values", "filter", "sortBy", "sortOrder"];
+      if ("Worker" in window) {
+        return new Promise((resolve) => {
+          const worker = new Worker("gsh/gsh-worker.js");
+          worker.onmessage = (event) => {
+            resolve(event.data);
+            worker.terminate();
+          };
+          worker.postMessage([
+            fnSource,
+            fnArgs,
+            [values, filter, sortBy, sortOrder],
+          ]);
+        });
+      } else {
+        const fn = new Function(...fnArgs, fnSource);
+        return Promise.resolve(fn(values, filter, sortBy, sortOrder));
+      }
     };
 
     _dispatchChangeEvent = () => {

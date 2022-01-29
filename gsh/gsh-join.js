@@ -93,25 +93,40 @@ customElements.define(
         `return ${this.when};`
       );
       if (whenCondition(left, right)) {
-        this.value = this._join(this.leftValue, this.rightValue, this.by);
-        this._dispatchChangeEvent();
+        this._join(this.leftValue, this.rightValue, this.by).then((values) => {
+          this.value = values;
+          this._dispatchChangeEvent();
+        });
       }
     };
 
     _join = (left, right, by) => {
-      const byEqualFunction = (leftItem, rightItem) => {
-        return new Function("left", "right", `return ${by};`)(
+      const fnSource = `const byEqualFunction = (leftItem, rightItem) => {
+        return new Function("left", "right", \`return \${by};\`)(
           leftItem,
           rightItem
         );
       };
-
       return left.map((leftItem) => {
         return {
           ...leftItem,
           ...right.find((rightItem) => byEqualFunction(leftItem, rightItem)),
         };
-      });
+      });`;
+      const fnArgs = ["left", "right", "by"];
+      if ("Worker" in window) {
+        return new Promise((resolve) => {
+          const worker = new Worker("gsh/gsh-worker.js");
+          worker.onmessage = (event) => {
+            resolve(event.data);
+            worker.terminate();
+          };
+          worker.postMessage([fnSource, fnArgs, [left, right, by]]);
+        });
+      } else {
+        const fn = new Function(...fnArgs, fnSource);
+        return Promise.resolve(fn(left, right, by));
+      }
     };
 
     _dispatchChangeEvent = () => {
