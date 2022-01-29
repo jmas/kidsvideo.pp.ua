@@ -67,24 +67,16 @@ customElements.define(
     }
 
     _addDataListeners = () => {
-      this.leftElement.addEventListener(
-        "change",
-        this._dataChangeListener,
-        true
-      );
-      this.rightElement.addEventListener(
-        "change",
-        this._dataChangeListener,
-        true
-      );
+      this.leftElement.addEventListener("change", this._changeListener, true);
+      this.rightElement.addEventListener("change", this._changeListener, true);
     };
 
     _removeDataListeners = () => {
-      this.leftElement.removeEventListener("change", this._dataChangeListener);
-      this.rightElement.removeEventListener("change", this._dataChangeListener);
+      this.leftElement.removeEventListener("change", this._changeListener);
+      this.rightElement.removeEventListener("change", this._changeListener);
     };
 
-    _dataChangeListener = () => {
+    _changeListener = () => {
       const left = this.leftValue;
       const right = this.rightValue;
       const whenCondition = new Function(

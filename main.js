@@ -80,10 +80,43 @@ const addVideoClickListener = () => {
   });
 };
 
+const addScrollFooterListener = () => {
+  const footer = document.querySelector("footer");
+  const paginator = document.getElementById(
+    "videos-channels-filtered-shuffled-paginated-data"
+  );
+  const onIntersection = ([{ isIntersecting }]) => {
+    if (isIntersecting) {
+      const limit = Number(paginator.getAttribute("limit"));
+      paginator.setAttribute("limit", limit + limit);
+    }
+  };
+  const observer = new IntersectionObserver(onIntersection, { threshold: 1 });
+  observer.observe(footer);
+};
+
+const addNextButtonListener = () => {
+  const nextButton = document.getElementById("next");
+  const paginator = document.getElementById(
+    "videos-channels-filtered-shuffled-paginated-data"
+  );
+  const initialLimit = Number(paginator.getAttribute("limit"));
+  nextButton.addEventListener(
+    "click",
+    () => {
+      const limit = Number(paginator.getAttribute("limit"));
+      paginator.setAttribute("limit", limit + initialLimit);
+    },
+    true
+  );
+};
+
 const main = () => {
   addVideoClickListener();
   addTopicsFilterListener();
   addChannelsFilterListener();
+  addNextButtonListener();
+  // addScrollFooterListener();
 };
 
 main();

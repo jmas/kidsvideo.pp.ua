@@ -5,10 +5,6 @@ customElements.define(
       super();
     }
 
-    static get observedAttributes() {
-      return ["item-template"];
-    }
-
     get renderInto() {
       return this.getAttribute("render-into");
     }

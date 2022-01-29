@@ -46,18 +46,14 @@ customElements.define(
     }
 
     _addDataListeners = () => {
-      this.fromElement.addEventListener(
-        "change",
-        this._dataChangeListener,
-        true
-      );
+      this.fromElement.addEventListener("change", this._changeListener, true);
     };
 
     _removeDataListeners = () => {
-      this.fromElement.removeEventListener("change", this._dataChangeListener);
+      this.fromElement.removeEventListener("change", this._changeListener);
     };
 
-    _dataChangeListener = () => {
+    _changeListener = () => {
       this._shuffle(this.fromValue, this.groupBy).then((values) => {
         this.value = values;
         this._dispatchChangeEvent();

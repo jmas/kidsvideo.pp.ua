@@ -3,10 +3,19 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
+      this._value = [];
+    }
+
+    static get observedAttributes() {
+      return ["limit", "offset"];
     }
 
     get value() {
-      return JSON.parse(this.textContent.trim());
+      return this._value;
+    }
+
+    set value(value) {
+      this._value = value;
     }
 
     get from() {
@@ -43,22 +52,27 @@ customElements.define(
       this._removeDataListeners();
     }
 
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue === newValue) {
+        return;
+      }
+      if (name === "limit" || name === "offset") {
+        this._changeListener();
+      }
+    }
+
     _addDataListeners = () => {
-      this.fromElement.addEventListener(
-        "change",
-        this._dataChangeListener,
-        true
-      );
+      this.fromElement.addEventListener("change", this._changeListener, true);
     };
 
     _removeDataListeners = () => {
-      this.fromElement.removeEventListener("change", this._dataChangeListener);
-      this.rightElement.removeEventListener("change", this._dataChangeListener);
+      this.fromElement.removeEventListener("change", this._changeListener);
+      this.rightElement.removeEventListener("change", this._changeListener);
     };
 
-    _dataChangeListener = () => {
+    _changeListener = () => {
       this._paginate(this.fromValue, this.limit, this.offset).then((values) => {
-        this._render(values);
+        this.value = values;
         this._dispatchChangeEvent();
       });
     };
@@ -82,10 +96,6 @@ customElements.define(
       } else {
         return Promise.resolve(fn(...fnArgs));
       }
-    };
-
-    _render = (value) => {
-      this.textContent = JSON.stringify(value);
     };
 
     _dispatchChangeEvent = () => {

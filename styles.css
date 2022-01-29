@@ -402,3 +402,20 @@ footer {
   margin-inline: 1rem;
   white-space: nowrap;
 }
+
+.next-button {
+  background-color: rgba(var(--link), 0.025);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  box-shadow: 0 0 0 1px rgba(var(--link), 0.05) inset;
+  color: rgb(var(--link));
+  border: none;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  font-size: 120%;
+}
