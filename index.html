@@ -179,10 +179,7 @@
               item-template="#channels-item"
               render-into="#channels-list"
             >
-              <div
-                class="channels-list emptyPlaceholder"
-                id="channels-list"
-              ></div>
+              <div class="channels-list loaderOnEmpty" id="channels-list"></div>
             </gsh-list>
           </form>
         </details>
@@ -192,7 +189,7 @@
           item-template="#videos-item"
           render-into="#videos-list"
         >
-          <div class="videos-list emptyPlaceholder" id="videos-list"></div>
+          <div class="videos-list loaderOnEmpty" id="videos-list"></div>
         </gsh-list>
         <ul class="links">
           <li>

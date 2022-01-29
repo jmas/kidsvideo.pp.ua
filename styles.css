@@ -104,7 +104,7 @@ footer {
   color: rgba(0, 0, 0, 0.5);
 }
 
-.emptyPlaceholder:empty::before {
+.loaderOnEmpty:empty::before {
   display: block;
   content: "";
   height: 220px;
