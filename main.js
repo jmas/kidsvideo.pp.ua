@@ -1,6 +1,7 @@
-const applyFilterForm = () => {
-  const form = document.getElementById("filter-form");
-  const filter = document.getElementById("videos-channels-filtered-data");
+const applyContentFilter = () => {
+  const form = document.getElementById("content-filter-form");
+  const videosFilter = document.getElementById("videos-channels-filtered-data");
+  const channelsFilter = document.getElementById("channels-filtered-data");
   const elements = Array.from(form.elements);
   const conditionItems = [];
   elements.forEach((element) => {
@@ -8,20 +9,32 @@ const applyFilterForm = () => {
       conditionItems.push([element.name, element.value]);
     }
   });
-  filter.setAttribute(
-    "filter",
-    conditionItems
-      .map(([name, value]) => `item.${name} == '${value}'`)
-      .join(" || ")
-  );
+  const filterValue = conditionItems
+    .map(([name, value]) => `item.${name} == '${value}'`)
+    .join(" || ");
+  videosFilter.setAttribute("filter", filterValue);
+  channelsFilter.setAttribute("filter", filterValue);
 };
 
-const addFilterFormListener = () => {
-  const form = document.getElementById("filter-form");
+const addContentFilterListener = () => {
+  const form = document.getElementById("content-filter-form");
   form.addEventListener(
     "change",
     () => {
-      applyFilterForm();
+      setTimeout(() => {
+        applyContentFilter();
+      }, 300);
+    },
+    true
+  );
+};
+
+const addChannelsFilterListener = () => {
+  const form = document.getElementById("channels-filter-form");
+  form.addEventListener(
+    "change",
+    () => {
+      console.log("applyChannelsFilter");
     },
     true
   );
@@ -52,8 +65,9 @@ const addVideoClickListener = () => {
 
 const main = () => {
   addVideoClickListener();
-  addFilterFormListener();
-  applyFilterForm();
+  addContentFilterListener();
+  addChannelsFilterListener();
+  applyContentFilter();
 };
 
 main();

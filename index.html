@@ -123,7 +123,7 @@
       </div>
 
       <div class="container">
-        <form id="filter-form" class="controls">
+        <form id="content-filter-form" class="controls">
           <label class="controls-item">
             <div class="controls-control">
               <label class="switch">
@@ -170,12 +170,29 @@
             <div class="controls-caption">Самоделки</div>
           </label>
         </form>
+
+        <details>
+          <summary>Список выбранных каналов</summary>
+          <form id="channels-filter-form">
+            <gsh-list
+              from-data="#channels-filtered-data"
+              item-template="#channels-item"
+              render-into="#channels-list"
+            >
+              <div
+                class="channels-list emptyPlaceholder"
+                id="channels-list"
+              ></div>
+            </gsh-list>
+          </form>
+        </details>
+
         <gsh-list
           from-data="#videos-channels-filtered-shuffled-paginated-data"
           item-template="#videos-item"
           render-into="#videos-list"
         >
-          <div class="video-list" id="videos-list"></div>
+          <div class="videos-list emptyPlaceholder" id="videos-list"></div>
         </gsh-list>
         <ul class="links">
           <li>
@@ -215,6 +232,21 @@
         insert-video-id="${videoId}"
         insert-channel-pic="${channelPicture}"
       ></yt-video>
+    </template>
+    <template id="channels-item">
+      <label class="channels-item">
+        <img insert-src="${channelPicture}" insert-alt="${channelName}" />
+        <span insert="${channelName}" insert-title="${channelName}"></span>
+        <label class="switch switch-small">
+          <input
+            type="checkbox"
+            name="channels"
+            insert-value="${channelId}"
+            checked
+          />
+          <span class="slider round"></span>
+        </label>
+      </label>
     </template>
 
     <!-- Data -->
@@ -259,6 +291,12 @@
       id="videos-channels-filtered-shuffled-paginated-data"
       hidden
     ></gsh-paginator>
+    <gsh-filter
+      from="#channels-data"
+      filter="true"
+      id="channels-filtered-data"
+      hidden
+    ></gsh-filter>
 
     <!-- Scripts -->
     <script src="main.js" defer></script>
