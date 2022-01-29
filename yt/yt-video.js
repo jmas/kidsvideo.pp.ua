@@ -105,7 +105,7 @@ customElements.define(
             ${
               this.channelPicture
                 ? `<span style="background-image: url(${this.channelPicture});"></span>`
-                : ""
+                : `<span style="display: none;"></span>`
             }
             <span>${title}</span>
           </span>
