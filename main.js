@@ -51,7 +51,7 @@ const addChannelsFilterListener = () => {
 
 const addFilterApplier = () => {
   document.getElementById("channels-data").addEventListener("change", () => {
-    setIntermediate(() => {
+    setImmediate(() => {
       applyFilter();
     });
   });
