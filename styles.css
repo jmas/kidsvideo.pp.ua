@@ -157,10 +157,10 @@ footer {
   }
 }
 
-.video-list img {
+.video-list a > img {
   display: block;
   width: 100%;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   background-color: rgba(0, 0, 0, 0.1);
   aspect-ratio: 16/8.8;
   object-fit: cover;
@@ -168,8 +168,26 @@ footer {
   outline-offset: -1px;
 }
 
-.video-list a span {
-  display: block;
+.video-list a > span {
+  display: flex;
+  align-items: flex-start;
+}
+
+.video-list a > span > img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 100%;
+  margin-right: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  outline: 1px solid rgba(0, 0, 0, 0.05);
+  outline-offset: -1px;
+}
+
+.video-list a > span > span {
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
 }
 
 .video-list .placeholder {

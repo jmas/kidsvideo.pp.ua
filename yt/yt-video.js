@@ -17,6 +17,10 @@ customElements.define(
       return this.getAttribute("title");
     }
 
+    get channelPic() {
+      return this.getAttribute("channel-pic");
+    }
+
     connectedCallback() {
       this._renderPlaceholder();
       this._addIntersectionObserver();
@@ -92,7 +96,14 @@ customElements.define(
             loading="lazy"
             alt="${title}"
           />
-          <span>${title}</span>
+          <span>
+            ${
+              this.channelPic
+                ? `<img src="${this.channelPic}" loading="lazy" alt="Channel" />`
+                : ""
+            }
+            <span>${title}</span>
+          </span>
         </a>
       `;
     };
