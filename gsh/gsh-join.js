@@ -101,19 +101,21 @@ customElements.define(
     };
 
     _join = (left, right, by) => {
-      const fnSource = `const byEqualFunction = (leftItem, rightItem) => {
-        return new Function("left", "right", \`return \${by};\`)(
-          leftItem,
-          rightItem
-        );
-      };
-      return left.map((leftItem) => {
-        return {
-          ...leftItem,
-          ...right.find((rightItem) => byEqualFunction(leftItem, rightItem)),
+      const fnArgs = [left, right, by];
+      function fn(left, right, by) {
+        const byEqualFunction = (leftItem, rightItem) => {
+          return new Function("left", "right", `return ${by};`)(
+            leftItem,
+            rightItem
+          );
         };
-      });`;
-      const fnArgs = ["left", "right", "by"];
+        return left.map((leftItem) => {
+          return {
+            ...leftItem,
+            ...right.find((rightItem) => byEqualFunction(leftItem, rightItem)),
+          };
+        });
+      }
       if ("Worker" in window) {
         return new Promise((resolve) => {
           const worker = new Worker("gsh/gsh-worker.js");
@@ -121,11 +123,10 @@ customElements.define(
             resolve(event.data);
             worker.terminate();
           };
-          worker.postMessage([fnSource, fnArgs, [left, right, by]]);
+          worker.postMessage([fn.toString(), fnArgs]);
         });
       } else {
-        const fn = new Function(...fnArgs, fnSource);
-        return Promise.resolve(fn(left, right, by));
+        return Promise.resolve(fn(...fnArgs));
       }
     };
 

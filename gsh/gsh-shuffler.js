@@ -65,38 +65,40 @@ customElements.define(
     };
 
     _shuffle = (values, groupBy) => {
-      const fnSource = `if (values.length === 0) {
-        return [];
-      }
-      const shuffled = [];
-      const grouped = groupBy
-        .map((groupKey) => {
-          return values.filter((value) => Boolean(value[groupKey]));
-        })
-        .filter((grouped) => grouped.length > 0);
-      const groupedSorted = grouped.sort((a, b) => {
-        return a.length - b.length;
-      });
-      const smallGroupsLength = Math.ceil(
-        values.length / groupedSorted[0].length
-      );
-      for (let i = 0; i < smallGroupsLength; i++) {
-        for (let j = 0; j < groupedSorted.length; j++) {
-          for (
-            let k = 0;
-            k < Math.ceil(groupedSorted[j].length / smallGroupsLength);
-            k++
-          ) {
-            shuffled.push(
-              groupedSorted[j][
-                i * Math.ceil(groupedSorted[j].length / smallGroupsLength) + k
-              ]
-            );
+      const fnArgs = [values, groupBy];
+      function fn(values, groupBy) {
+        if (values.length === 0) {
+          return [];
+        }
+        const shuffled = [];
+        const grouped = groupBy
+          .map((groupKey) => {
+            return values.filter((value) => Boolean(value[groupKey]));
+          })
+          .filter((grouped) => grouped.length > 0);
+        const groupedSorted = grouped.sort((a, b) => {
+          return a.length - b.length;
+        });
+        const smallGroupsLength = Math.ceil(
+          values.length / groupedSorted[0].length
+        );
+        for (let i = 0; i < smallGroupsLength; i++) {
+          for (let j = 0; j < groupedSorted.length; j++) {
+            for (
+              let k = 0;
+              k < Math.ceil(groupedSorted[j].length / smallGroupsLength);
+              k++
+            ) {
+              shuffled.push(
+                groupedSorted[j][
+                  i * Math.ceil(groupedSorted[j].length / smallGroupsLength) + k
+                ]
+              );
+            }
           }
         }
+        return shuffled.filter(Boolean);
       }
-      return shuffled.filter(Boolean);`;
-      const fnArgs = ["values", "groupBy"];
       if ("Worker" in window) {
         return new Promise((resolve) => {
           const worker = new Worker("gsh/gsh-worker.js");
@@ -104,19 +106,11 @@ customElements.define(
             resolve(event.data);
             worker.terminate();
           };
-          worker.postMessage([fnSource, fnArgs, [values, groupBy]]);
+          worker.postMessage([fn.toString(), fnArgs]);
         });
       } else {
-        const fn = new Function(...fnArgs, fnSource);
-        return Promise.resolve(fn(values, groupBy));
+        return Promise.resolve(fn(...fnArgs));
       }
-      // .filter(
-      //   (value, index, self) =>
-      //     index ===
-      //     self.findIndex(
-      //       (item) => item.place === value.place
-      //     )
-      // );
     };
 
     _dispatchChangeEvent = () => {

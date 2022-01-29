@@ -1,5 +1,5 @@
 onmessage = (event) => {
-  const [fnSource, fnArgs, fnArgsValues] = event.data;
-  const fn = new Function(...fnArgs, fnSource);
-  postMessage(fn(...fnArgsValues));
+  const [source, args] = event.data;
+  const fn = new Function("args", `return (${source})(...args);`);
+  postMessage(fn(args));
 };

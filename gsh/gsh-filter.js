@@ -87,31 +87,33 @@ customElements.define(
     };
 
     _filter = (values, filter, sortBy, sortOrder) => {
-      const fnSource = `if (sortBy) {
-        values = values.sort((a, b) => {
-          let valueA = a[sortBy];
-          let valueB = b[sortBy];
-          if (
-            String(valueA).startsWith("Date") &&
-            String(valueB).startsWith("Date")
-          ) {
-            valueA = new Function(\`return new \${valueA};\`)().getTime();
-            valueB = new Function(\`return new \${valueB};\`)().getTime();
-          }
-          if (sortOrder === "asc") {
-            return valueA - valueB;
-          }
-          return valueB - valueA;
-        });
+      const fnArgs = [values, filter, sortBy, sortOrder];
+      function fn(values, filter, sortBy, sortOrder) {
+        if (sortBy) {
+          values = values.sort((a, b) => {
+            let valueA = a[sortBy];
+            let valueB = b[sortBy];
+            if (
+              String(valueA).startsWith("Date") &&
+              String(valueB).startsWith("Date")
+            ) {
+              valueA = new Function(`return new ${valueA};`)().getTime();
+              valueB = new Function(`return new ${valueB};`)().getTime();
+            }
+            if (sortOrder === "asc") {
+              return valueA - valueB;
+            }
+            return valueB - valueA;
+          });
+        }
+        if (filter) {
+          const filterFunction = (item) => {
+            return new Function("item", `return ${filter};`)(item);
+          };
+          values = values.filter(filterFunction);
+        }
+        return values;
       }
-      if (filter) {
-        const filterFunction = (item) => {
-          return new Function("item", \`return \${filter};\`)(item);
-        };
-        values = values.filter(filterFunction);
-      }
-      return values;`;
-      const fnArgs = ["values", "filter", "sortBy", "sortOrder"];
       if ("Worker" in window) {
         return new Promise((resolve) => {
           const worker = new Worker("gsh/gsh-worker.js");
@@ -119,15 +121,10 @@ customElements.define(
             resolve(event.data);
             worker.terminate();
           };
-          worker.postMessage([
-            fnSource,
-            fnArgs,
-            [values, filter, sortBy, sortOrder],
-          ]);
+          worker.postMessage([fn.toString(), fnArgs]);
         });
       } else {
-        const fn = new Function(...fnArgs, fnSource);
-        return Promise.resolve(fn(values, filter, sortBy, sortOrder));
+        return Promise.resolve(fn(...fnArgs));
       }
     };
 

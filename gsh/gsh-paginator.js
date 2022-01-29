@@ -64,10 +64,12 @@ customElements.define(
     };
 
     _paginate = (values, limit, offset) => {
-      const fnSource = `const start = offset;
-      const end = offset + limit;
-      return values.slice(start, end > values.length ? values.length : end);`;
-      const fnArgs = ["values", "limit", "offset"];
+      const fnArgs = [values, limit, offset];
+      function fn(values, limit, offset) {
+        const start = offset;
+        const end = offset + limit;
+        return values.slice(start, end > values.length ? values.length : end);
+      }
       if ("Worker" in window) {
         return new Promise((resolve) => {
           const worker = new Worker("gsh/gsh-worker.js");
@@ -75,11 +77,10 @@ customElements.define(
             resolve(event.data);
             worker.terminate();
           };
-          worker.postMessage([fnSource, fnArgs, [values, limit, offset]]);
+          worker.postMessage([fn.toString(), fnArgs]);
         });
       } else {
-        const fn = new Function(...fnArgs, fnSource);
-        return Promise.resolve(fn(values, limit, offset));
+        return Promise.resolve(fn(...fnArgs));
       }
     };
 
