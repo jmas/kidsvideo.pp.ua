@@ -32,16 +32,23 @@ const applyFilter = () => {
       [topicsFilterValue, channelsFilterValue].filter(Boolean).join(" && ")
     );
   }, 100);
+
+  const paginator = document.getElementById(
+    "videos-channels-filtered-shuffled-paginated-data"
+  );
+  paginator.setAttribute("limit", 24);
 };
 
 const addTopicsFilterListener = () => {
+  let timer = null;
   const form = document.getElementById("topics-filter-form");
   form.addEventListener(
     "change",
     () => {
-      setTimeout(() => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
         applyFilter();
-      }, 200);
+      }, 1000);
     },
     true
   );
@@ -49,12 +56,14 @@ const addTopicsFilterListener = () => {
 
 const addChannelsFilterListener = () => {
   const form = document.getElementById("channels-filter-form");
+  let timer = null;
   form.addEventListener(
     "change",
     () => {
-      setTimeout(() => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
         applyFilter();
-      }, 200);
+      }, 1000);
     },
     true
   );
