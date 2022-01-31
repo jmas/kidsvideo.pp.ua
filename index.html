@@ -86,6 +86,8 @@
     </script>
   </head>
   <body>
+    <div class="view" id="view"></div>
+
     <header>
       <div class="container">
         <img
@@ -171,7 +173,7 @@
           </label>
         </form>
 
-        <details>
+        <details id="channels-details">
           <summary>Список выбранных каналов</summary>
           <form id="channels-filter-form">
             <gsh-list
@@ -208,7 +210,7 @@
           </svg>
         </button>
 
-        <ul class="links">
+        <ul class="links" id="links">
           <li>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSeKcv3DIUZQyuXWjkz_Rxw_Wps8Sfc_ty1XCLrba97yOfzXLw/viewform?usp=sf_link"

@@ -82,20 +82,46 @@ const addVideoClickListener = () => {
   if (!(typeof HTMLDialogElement === "function")) {
     return;
   }
+  const view = document.getElementById("view");
   document.body.addEventListener("click", (event) => {
     const target = event.target.closest("a");
-    if (target && target.href.startsWith("https://www.youtube.com/watch?v=")) {
+    if (event.target.id === "next") {
       event.preventDefault();
-      const dialog = document.getElementById("video-dialog");
+    } else if (
+      target &&
+      target.href.startsWith("https://www.youtube.com/watch?v=")
+    ) {
+      event.preventDefault();
       const [, videoId] = target.href.match(
         /^https:\/\/www\.youtube\.com\/watch\?v=(.+?)$/
       );
-      dialog.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-      dialog.open = true;
-    } else if (!event.target.closest("dialog")) {
-      const dialog = document.getElementById("video-dialog");
-      dialog.textContent = "";
-      dialog.open = false;
+      view.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      document.body.classList.add("viewing");
+    } else if (document.body.classList.contains("viewing")) {
+      const getRandom = (min, max) => {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      };
+      const a = getRandom(10, 30);
+      const b = getRandom(10, 30);
+      const operations = ["+", "-"];
+      const operation = operations[getRandom(1, operations.length - 1)];
+      const example = `${a} ${operation} ${b}`;
+      const getResult = new Function(`return ${example};`);
+      console.log(example, getResult());
+      if (
+        parseInt(
+          prompt(
+            `Чтобы выйти из режима просмотра, вычислите:\n${example} = `,
+            ""
+          ),
+          10
+        ) === getResult()
+      ) {
+        view.textContent = "";
+        document.body.classList.remove("viewing");
+      }
     }
   });
 };
