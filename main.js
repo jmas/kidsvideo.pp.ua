@@ -91,9 +91,9 @@ const addVideoClickListener = () => {
       const [, videoId] = target.href.match(
         /^https:\/\/www\.youtube\.com\/watch\?v=(.+?)$/
       );
-      view.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      view.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
       document.body.classList.add("viewing");
-    } else if (document.body.classList.contains("viewing")) {
+    } else if (event.target.id === "exit") {
       const getRandom = (min, max) => {
         min = Math.ceil(min);
         max = Math.floor(max);

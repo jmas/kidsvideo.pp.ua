@@ -428,8 +428,8 @@ footer {
   height: 50vh;
   z-index: 1000;
   display: none;
-  background-color: rgba(0, 0, 0, 0.85);
-  box-shadow: 0 0 3rem rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 1);
+  box-shadow: 0 0 2rem rgba(0, 0, 0, 0.95);
 }
 
 .view > iframe {
@@ -450,6 +450,11 @@ body.viewing {
   margin-top: calc(50vh + 2rem);
 }
 
+#exit {
+  display: none;
+}
+
+body.viewing #exit,
 body.viewing .view {
   display: block;
 }
