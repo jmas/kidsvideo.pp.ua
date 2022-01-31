@@ -105,7 +105,6 @@ const addVideoClickListener = () => {
       const operation = operations[getRandom(1, operations.length - 1)];
       const example = `${a} ${operation} ${b}`;
       const getResult = new Function(`return ${example};`);
-      console.log(example, getResult());
       if (
         parseInt(
           prompt(
@@ -159,11 +158,22 @@ const addNextButtonListener = () => {
   );
 };
 
+const addBeforeUnloadListener = () => {
+  window.addEventListener("beforeunload", (event) => {
+    if (document.body.classList.contains("viewing")) {
+      event.preventDefault();
+      event.returnValue =
+        "Вы сейчас просматриваете видео, действительно хотите выйти?";
+    }
+  });
+};
+
 const main = () => {
   addVideoClickListener();
   addTopicsFilterListener();
   addChannelsFilterListener();
   addNextButtonListener();
+  addBeforeUnloadListener();
 };
 
 main();
