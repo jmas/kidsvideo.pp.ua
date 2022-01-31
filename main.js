@@ -78,10 +78,6 @@ const addFilterApplier = () => {
 };
 
 const addVideoClickListener = () => {
-  // Check that browser supports dialog element
-  if (!(typeof HTMLDialogElement === "function")) {
-    return;
-  }
   const view = document.getElementById("view");
   document.body.addEventListener("click", (event) => {
     const target = event.target.closest("a");
