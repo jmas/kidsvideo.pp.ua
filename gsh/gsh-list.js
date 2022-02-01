@@ -27,6 +27,7 @@ customElements.define(
     }
 
     get fromDataValues() {
+      console.log(this.fromDataElement.value || []);
       return this.fromDataElement.value || [];
     }
 

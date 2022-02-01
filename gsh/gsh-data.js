@@ -7,7 +7,7 @@ customElements.define(
     }
 
     static get observedAttributes() {
-      return ["document-id", "sheet"];
+      return ["url"];
     }
 
     get value() {
@@ -18,36 +18,20 @@ customElements.define(
       this._value = value;
     }
 
-    get reverse() {
-      return this.getAttribute("reverse") !== null;
-    }
-
-    get types() {
-      return Object.fromEntries(
-        new URLSearchParams(this.getAttribute("types") || "")
-      );
+    get url() {
+      return this.getAttribute("url");
     }
 
     connectedCallback() {
-      this._fetchAndRender(
-        this.getAttribute("document-id"),
-        this.getAttribute("sheet")
-      );
+      this._fetchAndRender(this.url);
     }
 
     disconnectedCallback() {
       this._value = undefined;
     }
 
-    _fetchAndRender = (documentId, sheet) => {
-      const sheets = sheet.split(" ");
-
-      (sheets.length > 1
-        ? Promise.all(
-            sheets.map((sheet) => this._fetchSheetValues(documentId, sheet))
-          )
-        : this._fetchSheetValues(documentId, sheet)
-      )
+    _fetchAndRender = (url) => {
+      this._fetchSheetValues(url)
         .then((values) => {
           this.value = values;
           this._dispatchChangeEvent();
@@ -57,10 +41,8 @@ customElements.define(
         });
     };
 
-    _fetchSheetValues = (documentId, sheet) => {
-      return fetch(
-        `https://docs.google.com/spreadsheets/d/${documentId}/gviz/tq?tqx=out:json&sheet=${sheet}`
-      )
+    _fetchSheetValues = (url) => {
+      return fetch(url)
         .then((response) => response.text())
         .then(
           (text) =>

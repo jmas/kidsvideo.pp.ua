@@ -285,18 +285,8 @@
     </template>
 
     <!-- Data -->
-    <gsh-data
-      document-id="1ZJ8SjPup1dadvJNpOXatiVyKeNV8Kf8K8jtJggkewlU"
-      sheet="videos"
-      id="videos-data"
-      hidden
-    ></gsh-data>
-    <gsh-data
-      document-id="1ZJ8SjPup1dadvJNpOXatiVyKeNV8Kf8K8jtJggkewlU"
-      sheet="channels"
-      id="channels-data"
-      hidden
-    ></gsh-data>
+    <gsh-data url="data/videos.js" id="videos-data" hidden></gsh-data>
+    <gsh-data url="data/channels.js" id="channels-data" hidden></gsh-data>
     <gsh-join
       from-left="#videos-data"
       from-right="#channels-data"
@@ -335,8 +325,8 @@
 
     <!-- Scripts -->
     <script src="main.js" defer></script>
-    <script src="gsh/gsh-list.js" defer></script>
     <script src="gsh/gsh-data.js" defer></script>
+    <script src="gsh/gsh-list.js" defer></script>
     <script src="gsh/gsh-join.js" defer></script>
     <script src="gsh/gsh-filter.js" defer></script>
     <script src="gsh/gsh-shuffler.js" defer></script>
