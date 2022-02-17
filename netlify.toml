@@ -2,4 +2,4 @@
   from = "/"
   to = "https://ykids.online"
   status = 301
-  
+  force = true
